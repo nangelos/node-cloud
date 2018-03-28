@@ -8,23 +8,33 @@
     }
   },
   "dependencies": {
+    "js-cookie": "^2.2.0",
+    "lodash": "^4.17.5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-dropzone": "^4.2.9",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",
-    "styled-components": "^3.2.3"
+    "react-virtualized": "^9.18.5",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "styled-components": "^3.2.3",
+    "superagent": "^3.8.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-      "eject": "react-scripts eject",
-      "precommit": "lint-staged"
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
   },
-    "lint-staged": {
-        "*.{js,json}": ["prettier --write", "git add"]
-    },
+  "lint-staged": {
+    "*.{js}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "devDependencies": {
     "eslint": "^4.19.1",
     "husky": "^0.14.3",
