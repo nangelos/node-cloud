@@ -13,7 +13,6 @@ injectGlobal`
    background: #333;
 }
 `
-
 class App extends Component {
   render() {
     return (
