@@ -1,54 +1,46 @@
 import React, { Component, Fragment } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { head } from 'lodash'
+
+import FilesList from './components/FilesList'
 
 const PathHeader = styled.h1`
   font-size: 36px;
   color: ${p => p.theme.primaryColor};
 `
-const FilesWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-`
-const DescriptionWrapper = styled.div`
-  display: flex;
-  margin: 20px;
-  font-size: 12px;
-  justify-content: space-between;
-  color: ${p => p.theme.primaryColor};
-  align-items: baseline;
-`
-const StyledLink = styled(Link)`
-  font-size: 12px;
-  text-decoration: none;
-  color: ${p => p.theme.primaryColor};
-`
+
 const testFiles = [
   { fileName: 'output.txt', dateModified: '2018-05-13' },
   { fileName: 'readme.md', dateModified: '2018-07-11' },
   { fileName: 'term-paper.doc', dateModified: '2018-07-13' },
   { fileName: 'coolPhoto.jpg', dateModified: '2018-08-14' },
-  { fileName: 'spreadsheet.csv', dateModified: '2018-09-18' }
+  { fileName: 'spreadsheet.csv', dateModified: '2018-09-18' },
+  { directoryName: 'school stuff', dateModified: '2018-09-18', files: [
+      { fileName: 'assignment1.docx', dateModified: '2017-06-25' },
+      { fileName: 'BUS 1011 Final Paper.docx', dateModified: '2016-3-22' }
+] }
 ]
 class UserPage extends Component {
+    state = {
+        filePath: ''
+}
+    componentDidMount() {
+        const { location: {pathname} } = this.props
+        console.log(this.props)
+        this.setState({ filePath: pathname.replace('/','') })
+}
+    componentDidUpdate(prevProps) {
+        if (prevProps.match.params !== this.props.match.params) {
+        const { location: { pathname }} = this.props
+            this.setState({filePath: pathname.replace('/','') })
+}
+
+}
   render() {
-    const { match: { params } } = this.props
-    const filePath = Object.values(params).join('/')
+    const {filePath} = this.state
     return (
       <Fragment>
         <PathHeader>{filePath}</PathHeader>
-        <FilesWrapper>
-          {testFiles.map((file, i) => (
-            <DescriptionWrapper key={i}>
-              <StyledLink to={file.fileName} style={{ marginRight: '10px' }}>
-                {file.fileName}
-              </StyledLink>
-              <p>{file.dateModified}</p>
-            </DescriptionWrapper>
-          ))}
-        </FilesWrapper>
+        <FilesList files={testFiles} />
       </Fragment>
     )
   }
