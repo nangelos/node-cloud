@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { injectGlobal, ThemeProvider } from 'styled-components'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -13,16 +13,13 @@ injectGlobal`
    background: #333;
 }
 `
-class App extends Component {
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <IndexPage />
-        </BrowserRouter>
-      </ThemeProvider>
-    )
-  }
-}
+
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <BrowserRouter>
+      <IndexPage />
+    </BrowserRouter>
+  </ThemeProvider>
+)
 
 export default App

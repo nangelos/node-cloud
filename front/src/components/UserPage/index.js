@@ -28,16 +28,19 @@ class UserPage extends Component {
   state = {
     filePath: ''
   }
+
   componentDidMount() {
     const { location: { pathname } } = this.props
     this.setState({ filePath: pathname.replace('/', '') })
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.match.params !== this.props.match.params) {
       const { location: { pathname } } = this.props
       this.setState({ filePath: pathname.replace('/', '') })
     }
   }
+
   render() {
     const { filePath } = this.state
     return (

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import styled from 'styled-components'
 import { Link, withRouter } from 'react-router-dom'
 import { orderBy } from 'lodash'
@@ -58,9 +58,16 @@ class FilesList extends Component {
         {orderBy(files, 'dateModified').map((file, i) => (
           <DescriptionWrapper key={i}>
             <FileName onClick={() => this.openFile(file)}>
-              {file.directoryName
-                ? `${this.getOpenSymbol(file.directoryName)}${' '}${file.directoryName}`
-                : file.fileName}
+              {file.directoryName ? (
+                <Fragment>
+                  <span style={{ position: 'relative', left: -8, marginRight: -6 }}>
+                    {this.getOpenSymbol(file.directoryName)}
+                  </span>
+                  {file.directoryName}
+                </Fragment>
+              ) : (
+                file.fileName
+              )}
             </FileName>
             <p>{file.dateModified}</p>
             {file.files &&

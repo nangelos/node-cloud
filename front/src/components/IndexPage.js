@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -15,19 +15,15 @@ const PageWrapper = styled.div`
   align-items: center;
 `
 
-class IndexPage extends Component {
-  render() {
-    return (
-      <PageWrapper>
-        <Switch>
-          <Route exact path="/" component={WelcomePage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/signup" component={SignUpPage} />
-          <Route path="/:user" component={UserPage} />
-        </Switch>
-      </PageWrapper>
-    )
-  }
-}
+const IndexPage = () => (
+  <PageWrapper>
+    <Switch>
+      <Route exact path="/" component={WelcomePage} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/signup" component={SignUpPage} />
+      <Route path="/:user" component={UserPage} />
+    </Switch>
+  </PageWrapper>
+)
 
 export default IndexPage
