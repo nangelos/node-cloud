@@ -8,6 +8,13 @@ const StyledHeader = styled.header`
   color: ${p => p.theme.primaryColor};
 `
 
+const ButtonContainer = styled.div`
+  display: flex;
+  width: 85%;
+  margin: auto;
+  justify-content: space-around;
+`
+
 const WelcomePage = ({ history }) => {
   const jumpTo = string => history.push(string)
   return (
@@ -15,12 +22,14 @@ const WelcomePage = ({ history }) => {
       <StyledHeader>
         <h1>Welcome to Tanta Cloud</h1>
       </StyledHeader>
-      <Button color="primaryColor" size="xl" inverted onClick={() => jumpTo('/login')}>
-        Login
-      </Button>
-      <Button color="secondaryColor" size="xl" onClick={() => jumpTo('/signup')}>
-        Sign up
-      </Button>
+      <ButtonContainer>
+        <Button color="primaryColor" size="xl" inverted onClick={() => jumpTo('/login')}>
+          Login
+        </Button>
+        <Button color="secondaryColor" size="xl" onClick={() => jumpTo('/signup')}>
+          Sign up
+        </Button>
+      </ButtonContainer>
     </Fragment>
   )
 }
