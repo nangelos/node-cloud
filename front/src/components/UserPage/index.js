@@ -1,11 +1,38 @@
-import React, { Component, Fragment } from 'react'
+// @flow
+import * as React from 'react'
 import styled from 'styled-components'
+import request from 'superagent'
+import Dropzone from 'react-dropzone'
+import { type Location } from 'react-router-dom'
 
 import FilesList from './components/FilesList'
 
 const PathHeader = styled.h1`
   font-size: 36px;
   color: ${p => p.theme.primaryColor};
+`
+
+const DropzoneIndicator = styled.div`
+  background: ${p => (p.active ? 'rgba(109, 110, 112, 0.35)' : 'transparent')};
+  width: 100%;
+  height: 100%;
+`
+
+const ProgressBarWrapper = styled.div`
+  position: absolute
+  border-radius: 30px;
+  width: 85%;
+  left: 5%;
+  top: 30%;
+  background: rgba(0,0,0,0.5);
+  height: 60px;
+`
+
+const ProgressBarCore = styled.div`
+  height: 60px;
+  border-radius: 30px;
+  background: #bada55;
+  width: ${p => `${p.progress}%`};
 `
 
 const testFiles = [
@@ -24,9 +51,33 @@ const testFiles = [
   }
 ]
 
-class UserPage extends Component {
+type State = {
+  filePath: string,
+  dropzoneActive: boolean,
+  status: 'REQUEST' | 'SUCCESS' | 'ERROR' | 'UPLOAD',
+  percent: number
+}
+
+type Props = {
+  ...Location
+}
+
+type File = {
+  lastModified: number,
+  lastModifiedDate: Date,
+  name: string,
+  preview: string,
+  size: number,
+  type: string,
+  webkitRelativePath: string
+}
+
+class UserPage extends React.Component<Props, State> {
   state = {
-    filePath: ''
+    filePath: '',
+    dropzoneActive: false,
+    status: 'SUCCESS',
+    percent: 0
   }
 
   componentDidMount() {
@@ -34,20 +85,50 @@ class UserPage extends Component {
     this.setState({ filePath: pathname.replace('/', '') })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.match.params !== this.props.match.params) {
       const { location: { pathname } } = this.props
       this.setState({ filePath: pathname.replace('/', '') })
     }
   }
 
+  onDragEnter = () => this.setState({ dropzoneActive: true })
+  onDragLeave = () => this.setState({ dropzoneActive: false })
+  onDrop = (files: File[]) => {
+    this.setState({ status: 'UPLOAD' })
+    files.forEach(file =>
+      request
+        .post('/api/files/')
+        .attach(file.name, file)
+        .on('progress', ({ percent }) => this.setState({ percent }))
+        .then(res => this.setState({ dropzoneActive: false, status: 'SUCCESS' }))
+        .catch(err => this.setState({ status: 'ERROR', dropzoneActive: false }))
+    )
+  }
+
   render() {
-    const { filePath } = this.state
+    const { filePath, dropzoneActive, percent, status } = this.state
     return (
-      <Fragment>
+      <Dropzone
+        disableClick
+        style={{ position: 'relative', width: '100%', height: '100%' }}
+        onDrop={this.onDrop}
+        onDragEnter={this.onDragEnter}
+        onDragLeave={this.onDragLeave}
+      >
         <PathHeader>{filePath}</PathHeader>
-        <FilesList files={testFiles} />
-      </Fragment>
+        <DropzoneIndicator active={dropzoneActive}>
+          <FilesList files={testFiles} />
+          {status === 'UPLOAD' && (
+            <ProgressBarWrapper id="progress">
+              <ProgressBarCore progress={percent} />
+            </ProgressBarWrapper>
+          )}
+          {status === 'ERROR' && (
+            <h3 style={{ color: 'red' }}>Something went wrong, please try again</h3>
+          )}
+        </DropzoneIndicator>
+      </Dropzone>
     )
   }
 }
